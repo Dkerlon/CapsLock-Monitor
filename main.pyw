@@ -1,6 +1,4 @@
-#!/usr/bin/env python3
 """
-CapsLock Monitor — popup minimalista no canto superior direito.
 Dependência: pip install pynput
 Execução:    python capslock_monitor.py   (ou .pyw para rodar sem terminal)
 """
@@ -17,24 +15,22 @@ def show_popup(is_caps_on: bool) -> None:
     root = tk.Tk()
     root.overrideredirect(True)
     root.attributes("-topmost", True)
-    root.attributes("-alpha", 0.0)       # começa invisível para o fade-in
+    root.attributes("-alpha", 0.0)
 
     # ── Paleta ────────────────────────────────────────────────────────────
     if is_caps_on:
-        bg        = "#E8F5E3"            # verde muito suave
-        accent    = "#2E7D32"            # verde escuro
-        dot_color = "#4CAF50"            # bolinha verde viva
+        bg        = "#E8F5E3"
+        accent    = "#2E7D32"
+        dot_color = "#4CAF50"
         label     = "CAPS  ON"
     else:
-        bg        = "#F5F5F5"            # cinza quase branco
-        accent    = "#424242"            # cinza escuro
-        dot_color = "#BDBDBD"            # bolinha cinza
+        bg        = "#F5F5F5"
+        accent    = "#424242"
+        dot_color = "#BDBDBD"
         label     = "CAPS  OFF"
 
-    # ── Layout compacto ───────────────────────────────────────────────────
     root.configure(bg=bg)
 
-    # borda sutil via frame externo
     border = tk.Frame(root, bg=accent, padx=1, pady=1)
     border.pack(fill="both", expand=True)
 
@@ -44,18 +40,15 @@ def show_popup(is_caps_on: bool) -> None:
     row = tk.Frame(inner, bg=bg)
     row.pack()
 
-    # bolinha indicadora
     canvas = tk.Canvas(row, width=8, height=8, bg=bg,
                        highlightthickness=0)
     canvas.create_oval(1, 1, 7, 7, fill=dot_color, outline="")
     canvas.pack(side="left", padx=(0, 7), pady=3)
 
-    # texto
     tk.Label(row, text=" ".join(label),
              font=("Courier New", 11, "bold"),
              bg=bg, fg=accent).pack(side="left")
 
-    # ── Posição: canto superior direito ───────────────────────────────────
     root.update_idletasks()
     w = inner.winfo_reqwidth()  + 30
     h = inner.winfo_reqheight() + 20
@@ -63,9 +56,8 @@ def show_popup(is_caps_on: bool) -> None:
     margin = 16
     root.geometry(f"{w}x{h}+{sw - w - margin}+{margin}")
 
-    # ── Animação fade-in → espera → fade-out ──────────────────────────────
     steps   = 10
-    delay   = 18   # ms por step
+    delay   = 18
 
     def fade_in(step=0):
         if step <= steps:
@@ -85,7 +77,6 @@ def show_popup(is_caps_on: bool) -> None:
     root.mainloop()
 
 
-# ── Detecção do estado inicial ────────────────────────────────────────────
 def detect_initial_caps() -> bool:
     try:
         import ctypes
@@ -110,7 +101,6 @@ def detect_initial_caps() -> bool:
     return False
 
 
-# ── Listener ──────────────────────────────────────────────────────────────
 def on_key_release(key):
     global _caps_active
     if key != keyboard.Key.caps_lock:
